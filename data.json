@@ -1,0 +1,16 @@
+{
+  "list": [
+    {
+      "item": "Example 2",
+      "completed": false,
+      "createdAt": "2022/03/15",
+      "id": 2
+    },
+    {
+      "item": "Example 6",
+      "completed": false,
+      "createdAt": "2022/03/15",
+      "id": 6
+    }
+  ]
+}

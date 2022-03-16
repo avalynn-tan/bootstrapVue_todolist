@@ -1,8 +1,3 @@
-To run project 
-1. Redirect to project path > Run 'json-server data.json' to enable json-server
-2. Open another cmd to run VueJs project > yarn serve
-
-
 # todo_list
 
 ## Project setup
@@ -24,3 +19,7 @@ yarn build
 ```
 yarn lint
 ```
+
+# To run project 
+1. Redirect to project path > Run 'json-server data.json' to enable json-server
+2. Open another cmd to run VueJs project > yarn serve

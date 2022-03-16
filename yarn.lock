@@ -6375,6 +6375,11 @@ vue@^2.6.14:
   resolved "https://registry.npmjs.org/vue/-/vue-2.6.14.tgz"
   integrity sha512-x2284lgYvjOMj3Za7kqzRcUSxBboHqtgRE2zlos1qWaOye5yUmHn42LB1250NJBLRwEcdrB0JRwyPTEPhfQjiQ==
 
+vuex@2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/vuex/-/vuex-2.0.0.tgz#26befa44de220f009e432d1027487bff29571cee"
+  integrity sha1-Jr76RN4iDwCeQy0QJ0h7/ylXHO4=
+
 watchpack@^2.3.1:
   version "2.3.1"
   resolved "https://registry.npmjs.org/watchpack/-/watchpack-2.3.1.tgz"

@@ -1,5 +1,5 @@
 <template id="task-list">
-  <div class="container">
+  <div class="container mt-3 mb-5">
     <div class="d-flex">
       <h1>Tasks 
         <transition name="fade">
@@ -24,104 +24,49 @@
 
     <div>
       <b-list-group>
-        <b-list-group-item v-for="list of itemList" :key="list.id">
-          <b-row>
-            <b-col cols="11">
-              <div 
-                @click="updateItem(list.id, !list.completed)"
-                :class="{ 'is-selected': list.completed }"
-                style="cursor:pointer"
-              >
-                <p class="itemName">{{list.item}}</p>
-                <p style="font-size:small; color:grey">{{list.createdAt}}</p>
-              </div>
-            </b-col>
-            <b-col>
-              <div class="text-center">
-                <b-button variant="link" @click="removeItem(list.id)">
-                  <b-icon icon="X" aria-hidden="true"></b-icon>
-                </b-button>
-              </div>
-            </b-col>
-          </b-row>
-        </b-list-group-item>
+        <list-card v-for="list of itemList" :key="list.id" :list="list" />
       </b-list-group>
     </div>
   </div>
 </template>
 
 <script>
-import axios from "axios";
+import listCard from "./listCard.vue";
 
 export default {
   name: 'task-list',
   data() {
     return {
-      itemList: [],
       itemName: "",
-      incomplete: 0
     };
   },
-  async created() {
-    try {
-      const res = await axios.get(`http://localhost:3000/list`);
-      this.itemList = res.data;
-
-      this.incomplete = this.itemList.filter(x => x.completed == false).length;
-
-      console.log(this.incomplete);
-    } catch (error) {
-      console.log(error);
+  components: {
+    listCard
+  },
+  computed: {
+    incomplete() {
+      return this.$store.state.lists.filter(x => x.completed == false).length;
+    },
+    itemList() {
+      return this.$store.state.lists;
     }
   },
+  mounted() {
+    this.$store.dispatch('getLists');
+  },
   methods: {
-    async addList() {
-      var formatted_date = new Date().toJSON().slice(0,10).replace(/-/g,'/');
-      
-      const res = await axios.post(`http://localhost:3000/list`, {
+    addList() {
+      this.$store.dispatch('addItem', {
         item: this.itemName,
-        completed: false,
-        createdAt: formatted_date
+        completed: false
       });
-      this.itemList = [...this.itemList, res.data];
-      this.itemName = "";
-
-      this.incomplete = this.itemList.filter(x => x.completed == false).length;
+      this.itemName = ""; // clear input value
     },
-    async updateItem(id, completed) {
-      await axios.patch(`http://localhost:3000/list/${id}`, {
-        completed: completed
-      });
-      this.itemList = this.itemList.map((item) => {
-        if (item.id === id) {
-          item.completed = completed;
-        }
-        return item;
-      });
-
-      this.incomplete = this.itemList.filter(x => x.completed == false).length;
+    clearCompleted() {
+      this.$store.dispatch('clearCompleted', this.itemList)
     },
-    async removeItem(id) {
-      await axios.delete(`http://localhost:3000/list/${id}`)
-      this.itemList = this.itemList.filter(item => item.id !== id)
-      this.incomplete = this.itemList.filter(x => x.completed == false).length;
-    },
-    async clearCompleted() {
-      Promise.all(
-        this.itemList.filter(x => x.completed == true)
-        .map(function(item) {
-          axios.delete(`http://localhost:3000/list/${item.id}`)
-      })).then(() => {
-        this.itemList = this.itemList.filter(x => x.completed == false);
-      });
-    },
-    async clearAll() {
-      Promise.all(this.itemList.map(function(item) {
-        axios.delete(`http://localhost:3000/list/${item.id}`)
-      })).then(() => {
-        this.itemList = [];
-        this.incomplete = 0;
-      });
+    clearAll() {
+      this.$store.dispatch('clearAll', this.itemList);
     }
   }
 }
